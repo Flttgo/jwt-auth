@@ -1,5 +1,5 @@
 {
-    "name": "konar-tech/jwt-auth",
+    "name": "flttgo/jwt-auth",
     "description": "JSON Web Token Authentication for Laravel and Lumen",
     "keywords": [
         "auth",
@@ -8,10 +8,10 @@
         "jwt",
         "laravel"
     ],
-    "homepage": "https://github.com/konar-tech/jwt-auth",
+    "homepage": "https://github.com/Flttgo/jwt-auth",
     "support": {
-        "issues": "https://github.com/konar-tech/jwt-auth/issues",
-        "source": "https://github.com/konar-tech/jwt-auth"
+        "issues": "https://github.com/Flttgo/jwt-auth/issues",
+        "source": "https://github.com/Flttgo/jwt-auth"
     },
     "license": "MIT",
     "authors": [
