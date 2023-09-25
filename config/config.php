@@ -27,17 +27,6 @@ return [
 
     'secret' => env('JWT_SECRET'),
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | JWT Token Key
-    |--------------------------------------------------------------------------
-    |
-    | Parsers get token from token key.
-    |
-    */
-    'token_key' => env('JWT_TOKEN_KEY', 'token'),
-
     /*
     |--------------------------------------------------------------------------
     | JWT Authentication Keys
@@ -140,12 +129,9 @@ return [
     |
     | Specify the hashing algorithm that will be used to sign the token.
     |
-    | See here: https://github.com/namshi/jose/tree/master/src/Namshi/JOSE/Signer/OpenSSL
-    | for possible values.
-    |
     */
 
-    'algo' => env('JWT_ALGO', 'HS256'),
+    'algo' => env('JWT_ALGO', Tymon\JWTAuth\Providers\JWT\Provider::ALGO_HS256),
 
     /*
     |--------------------------------------------------------------------------
@@ -311,5 +297,33 @@ return [
         'storage' => Tymon\JWTAuth\Providers\Storage\Illuminate::class,
 
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Parsers
+    |--------------------------------------------------------------------------
+    |
+    | Specify the various token parsers that are used to parse the token from http request.
+    |
+    */
+
+    'parsers' => [
+        \Tymon\JWTAuth\Http\Parser\TokenHeaders::class,
+        \Tymon\JWTAuth\Http\Parser\AuthHeaders::class,
+        \Tymon\JWTAuth\Http\Parser\Cookies::class,
+        \Tymon\JWTAuth\Http\Parser\QueryString::class,
+        \Tymon\JWTAuth\Http\Parser\RouteParams::class,
+        \Tymon\JWTAuth\Http\Parser\InputSource::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Token key
+    |--------------------------------------------------------------------------
+    |
+    | Specify the token key that is used to parse from the request.
+    |
+    */
+    'parser_token_key' => 'token',
 
 ];

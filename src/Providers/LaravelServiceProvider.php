@@ -11,12 +11,16 @@
 
 namespace Tymon\JWTAuth\Providers;
 
+use Illuminate\Support\Arr;
 use Tymon\JWTAuth\Http\Parser\AuthHeaders;
 use Tymon\JWTAuth\Http\Parser\Cookies;
 use Tymon\JWTAuth\Http\Parser\InputSource;
+use Tymon\JWTAuth\Http\Parser\KeyTrait;
 use Tymon\JWTAuth\Http\Parser\Parser;
 use Tymon\JWTAuth\Http\Parser\QueryString;
 use Tymon\JWTAuth\Http\Parser\RouteParams;
+use Tymon\JWTAuth\Http\Parser\TokenHeaders;
+use Tymon\JWTAuth\Token;
 
 class LaravelServiceProvider extends AbstractServiceProvider
 {
@@ -25,7 +29,7 @@ class LaravelServiceProvider extends AbstractServiceProvider
      */
     public function boot()
     {
-        $path = dirname(__DIR__, 2).'/config/config.php';
+        $path = realpath(__DIR__.'/../../config/config.php');
 
         $this->publishes([$path => config_path('jwt.php')], 'config');
         $this->mergeConfigFrom($path, 'jwt');
@@ -33,31 +37,6 @@ class LaravelServiceProvider extends AbstractServiceProvider
         $this->aliasMiddleware();
 
         $this->extendAuthGuard();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function registerTokenParser()
-    {
-        $this->app->singleton('tymon.jwt.parser', function ($app) {
-            $tokenKey = $this->config('token_key');
-
-            $parser = new Parser(
-                $app['request'],
-                [
-                    new AuthHeaders,
-                    (new QueryString)->setKey($tokenKey),
-                    (new InputSource)->setKey($tokenKey),
-                    (new RouteParams)->setKey($tokenKey),
-                    (new Cookies($this->config('decrypt_cookies')))->setKey($tokenKey),
-                ]
-            );
-
-            $app->refresh('request', $parser, 'setRequest');
-
-            return $parser;
-        });
     }
 
     /**
@@ -91,4 +70,34 @@ class LaravelServiceProvider extends AbstractServiceProvider
             $router->$method($alias, $middleware);
         }
     }
+
+    /**
+     * Register the bindings for the Token Parser.
+     *
+     * @return void
+     */
+    protected function registerTokenParser()
+    {
+        $this->app->singleton('tymon.jwt.parser', function ($app) {
+            $parser = tap(new Parser($app['request']), function(Parser $parser){
+                $chains = Arr::wrap($this->config('parsers'));
+                $parsers = [];
+
+                foreach ($chains as $chain){
+                    $parsers[] = tap(new $chain, function($chain){
+                        if (method_exists($chain, 'setKey')) {
+                            $chain->setKey($this->config('parser_token_key', 'token'));
+                        }
+                    });
+                }
+
+                $parser->setChain($parsers);
+            });
+
+            $app->refresh('request', $parser, 'setRequest');
+
+            return $parser;
+        });
+    }
+
 }
