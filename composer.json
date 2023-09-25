@@ -23,21 +23,22 @@
         }
     ],
     "require": {
-        "php": "^7.2|^8.0",
-        "illuminate/auth": "^5.2|^6|^7|^8|^9",
-        "illuminate/contracts": "^5.2|^6|^7|^8|^9",
-        "illuminate/http": "^5.2|^6|^7|^8|^9",
-        "illuminate/support": "^5.2|^6|^7|^8|^9",
-        "lcobucci/jwt": "<3.4",
+        "php": "~8.1.0 || ~8.2.0",
+        "illuminate/auth": "^8.83",
+        "illuminate/contracts": "^8.83",
+        "illuminate/http": "^8.83",
+        "illuminate/support": "^8.83",
+        "lcobucci/jwt": "^5.0",
         "namshi/jose": "^7.0",
         "nesbot/carbon": "^1.0|^2.0"
     },
     "require-dev": {
-        "illuminate/console": "^5.2|^6|^7|^8|^9",
-        "illuminate/database": "^5.2|^6|^7|^8|^9",
-        "illuminate/routing": "^5.2|^6|^7|^8|^9",
+        "illuminate/console": "^8.83",
+        "illuminate/database": "^8.83",
+        "illuminate/routing": "^8.83",
         "mockery/mockery": ">=0.9.9",
         "phpunit/phpunit": "^8.5|^9.4",
+        "roave/security-advisories": "dev-latest",
         "yoast/phpunit-polyfills": "^0.2.0"
     },
     "autoload": {
